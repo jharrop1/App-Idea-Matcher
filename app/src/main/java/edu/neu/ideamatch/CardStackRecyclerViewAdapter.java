@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class CardStackRecyclerViewAdapter extends RecyclerView.Adapter<CardStack
 
         void setIdea(IdeaDetails ideaData) {
             Picasso.get()
-                    .load(ideaData.getImage())
+                    .load(ideaData.getImageURL())
                     .fit()
                     .centerCrop()
                     .into(vhImage);

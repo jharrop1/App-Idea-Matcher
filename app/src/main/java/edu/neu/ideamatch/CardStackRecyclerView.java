@@ -1,5 +1,6 @@
 package edu.neu.ideamatch;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
@@ -12,6 +13,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
 import com.yuyakaido.android.cardstackview.CardStackListener;
 import com.yuyakaido.android.cardstackview.CardStackView;
@@ -25,6 +31,8 @@ public class CardStackRecyclerView extends AppCompatActivity {
 
     private CardStackLayoutManager csManager;
     private CardStackRecyclerViewAdapter csAdapter;
+    private ArrayList<IdeaDetails> csItems;
+    private DatabaseReference csIdeaList;
 
     private FirebaseAuth rvAuth;
 
@@ -33,8 +41,28 @@ public class CardStackRecyclerView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_stack_recycler_view);
 
+        csItems = new ArrayList<>();
         rvAuth = FirebaseAuth.getInstance();
         FirebaseUser rvUser = FirebaseAuth.getInstance().getCurrentUser();
+        csIdeaList = FirebaseDatabase.getInstance().getReference("ProjectIdeas");
+
+
+        //When a new idea is added it sees the change and notifies the list
+        csIdeaList.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    IdeaDetails idea = dataSnapshot.getValue(IdeaDetails.class);
+                    csItems.add(idea);
+                }
+                csAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         CardStackView cardStackView = findViewById(R.id.card_stack_view);
         csManager = new CardStackLayoutManager(this, new CardStackListener() {
@@ -87,22 +115,22 @@ public class CardStackRecyclerView extends AppCompatActivity {
         csManager.setCanScrollHorizontal(true);
         csManager.setSwipeableMethod(SwipeableMethod.Manual);
         csManager.setOverlayInterpolator(new LinearInterpolator());
-        csAdapter = new CardStackRecyclerViewAdapter(addList());
+        csAdapter = new CardStackRecyclerViewAdapter(csItems);
         cardStackView.setLayoutManager(csManager);
         cardStackView.setAdapter(csAdapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
     }
 
-    private ArrayList<IdeaDetails> addList() {
-        ArrayList<IdeaDetails> items = new ArrayList<>();
-        items.add(new IdeaDetails(R.drawable.pinder, "Pinder", "email", "Tinder for your pets", "Spot", "skills"));
-        items.add(new IdeaDetails(R.drawable.room_designer, "Room Designer", "email", "Uses augmented reailty to help redesign your room", "John", "skills"));
-        items.add(new IdeaDetails(R.drawable.pickup_sports, "Pickup Sports", "email", "Find athletes in your area to play pickup games with", "Ron", "skills here"));
-        items.add(new IdeaDetails(R.drawable.digital_grafiti, "Digital Graffiti", "email", "Uses augmented reailty to tag locations around the world and see other's tags by holding your phone up to it", "Micbac", "skills here"));
-        items.add(new IdeaDetails(R.drawable.battery_alarm, "Battery Alarm", "email", "Causes your phone's alarm to go off when it is at a given battery percentage", "Seveer Haon", "skills here"));
-
-        return items;
-    }
+//    private ArrayList<IdeaDetails> addList() {
+//        ArrayList<IdeaDetails> items = new ArrayList<>();
+//        items.add(new IdeaDetails(R.drawable.pinder, "Pinder", "email", "Tinder for your pets", "Spot", "skills"));
+//        items.add(new IdeaDetails(R.drawable.room_designer, "Room Designer", "email", "Uses augmented reailty to help redesign your room", "John", "skills"));
+//        items.add(new IdeaDetails(R.drawable.pickup_sports, "Pickup Sports", "email", "Find athletes in your area to play pickup games with", "Ron", "skills here"));
+//        items.add(new IdeaDetails(R.drawable.digital_grafiti, "Digital Graffiti", "email", "Uses augmented reailty to tag locations around the world and see other's tags by holding your phone up to it", "Micbac", "skills here"));
+//        items.add(new IdeaDetails(R.drawable.battery_alarm, "Battery Alarm", "email", "Causes your phone's alarm to go off when it is at a given battery percentage", "Seveer Haon", "skills here"));
+//
+//        return items;
+//    }
 
     public void logoutUser(View view)  {
         rvAuth.signOut();
