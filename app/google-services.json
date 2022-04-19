@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "772135981066",
+    "project_id": "ideamatch-cdb36",
+    "storage_bucket": "ideamatch-cdb36.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772135981066:android:119bbd57cd96046f3f8ff3",
+        "android_client_info": {
+          "package_name": "edu.neu.ideamatch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "772135981066-vbsvmtp14tpsndtu9pbuni35d102lj59.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu13ugrYXB8nQTUETuVFQDVo2PgnU3G58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "772135981066-vbsvmtp14tpsndtu9pbuni35d102lj59.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
