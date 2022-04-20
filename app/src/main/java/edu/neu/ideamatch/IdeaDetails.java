@@ -1,5 +1,7 @@
 package edu.neu.ideamatch;
 
+import android.net.Uri;
+
 public class IdeaDetails {
 //    private int image;
     private String imageURL;
@@ -16,6 +18,19 @@ public class IdeaDetails {
                        String ccreatorName,
                        String cdesiredSkills) {
         this.imageURL = cimageURL;
+        this.ideaName = cideaName;
+        this.contactInfo = ccontactInfo;
+        this.ideaDescription = cideaDescription;
+        this.creatorName = ccreatorName;
+        this.desiredSkills = cdesiredSkills;
+    }
+
+    public IdeaDetails(
+                       String cideaName,
+                       String ccontactInfo,
+                       String cideaDescription,
+                       String ccreatorName,
+                       String cdesiredSkills) {
         this.ideaName = cideaName;
         this.contactInfo = ccontactInfo;
         this.ideaDescription = cideaDescription;

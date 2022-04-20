@@ -63,8 +63,9 @@ public class CardStackRecyclerViewAdapter extends RecyclerView.Adapter<CardStack
         }
 
         void setIdea(IdeaDetails ideaData) {
+            String test = ideaData.getImageURL();
             Picasso.get()
-                    .load(ideaData.getImageURL())
+                    .load(test)
                     .fit()
                     .centerCrop()
                     .into(vhImage);

@@ -11,8 +11,10 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -21,8 +23,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,6 +48,7 @@ public class NewIdeaActivity extends AppCompatActivity {
     private Button niCreateNewIdea, niSelectImage;
     private ImageView niImage;
     private Uri niImageUri;
+    private Task<Uri> downloadUri;
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -106,6 +112,16 @@ public class NewIdeaActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             niImageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore
+                        .Images
+                        .Media
+                        .getBitmap(
+                                getContentResolver(),
+                                niImageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             niImage.setImageURI(niImageUri);
         }
     }
@@ -118,36 +134,7 @@ public class NewIdeaActivity extends AppCompatActivity {
         String description = niDescription.getText().toString();
         String desiredSkills = niDesiredSkills.getText().toString();
 
-        if (niImageUri != null) {
-            StorageReference imagepath = FirebaseStorage.getInstance().getReference().child("IdeaImages").child(System.currentTimeMillis() + "ideaName");
-            Bitmap bitmap = null;
-
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), niImageUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-            byte[] data = baos.toByteArray();
-            UploadTask uploadTask = imagepath.putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    finish();
-                }
-            });
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    imageUri = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-
-                }
-            });
-        } else {
-            finish();
-        }
+        uploadFile(ideaName);
 
         //Get the user node for the value listener
         userNode = root.getReference().child("Users").child(userID);
@@ -159,8 +146,8 @@ public class NewIdeaActivity extends AppCompatActivity {
                 String email = snapshot.child("email").getKey().toString();
                 String creatorName = snapshot.child("userName").getKey().toString();
 
+
                 IdeaDetails newIdea = new IdeaDetails(
-                        imageUri,
                         ideaName,
                         email,
                         description,
@@ -169,14 +156,14 @@ public class NewIdeaActivity extends AppCompatActivity {
                 //Adding the idea to the database and makes a succesful toast if it works
                 root.getReference().child("ProjectIdeas").child(ideaName).setValue(newIdea)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(NewIdeaActivity.this,
-                                "Idea was successfully added",
-                                Toast.LENGTH_SHORT).show();
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(NewIdeaActivity.this,
+                                        "Idea was successfully added",
+                                        Toast.LENGTH_SHORT).show();
 
-                    }
-                });
+                            }
+                        });
             }
 
             @Override
@@ -186,9 +173,88 @@ public class NewIdeaActivity extends AppCompatActivity {
         });
     }
 
+    private void uploadFile(String ideaName) {
+        if (niImageUri != null) {
+
+            // Defining the child of storageReference
+            StorageReference ref
+                    = FirebaseStorage.getInstance().getReference().child("IdeaImages").child(System.currentTimeMillis() + "ideaName");
+
+            // adding listeners on upload
+            // or failure of image
+            ref.putFile(niImageUri)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                                @Override
+                                public void onSuccess(
+                                        UploadTask.TaskSnapshot taskSnapshot)
+                                {
+                                    // Image uploaded successfully
+                                    // Dismiss dialog
+                                    Toast.makeText(NewIdeaActivity.this,
+                                                    "Image Uploaded!!",
+                                                    Toast.LENGTH_SHORT).show();
+                                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            root.getReference().child("ProjectIdeas").child(ideaName).child("imageURL").setValue(uri.toString());
+//                                            root.getReference().child("ProjectIdeas").child(ideaName).child("imageURL").setValue(ref.toString());
+                                        }
+                                    });
+                                }
+                            })
+
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            // Error, Image not uploaded
+                            Toast.makeText(NewIdeaActivity.this,
+                                            "Failed " + e.getMessage(),
+                                            Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+
+
     private String getFileExtension(Uri uri) {
         ContentResolver cR = getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
+
+//    if (niImageUri != null) {
+//        StorageReference imagepath = FirebaseStorage.getInstance().getReference().child("IdeaImages").child(System.currentTimeMillis() + "ideaName");
+//        Bitmap bitmap = null;
+//
+//        try {
+//            bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), niImageUri);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+//        byte[] data = baos.toByteArray();
+//        UploadTask uploadTask = imagepath.putBytes(data);
+//        uploadTask.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                finish();
+//            }
+//        });
+//        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                imageUri = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+//                Task<Uri> test = imagepath.getDownloadUrl();
+//                String test2 = imagepath.toString();
+//            }
+//        });
+//    } else {
+//        finish();
+//    }
 }
