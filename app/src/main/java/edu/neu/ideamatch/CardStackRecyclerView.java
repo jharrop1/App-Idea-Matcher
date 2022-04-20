@@ -1,16 +1,24 @@
 package edu.neu.ideamatch;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,12 +35,16 @@ import com.yuyakaido.android.cardstackview.SwipeableMethod;
 
 import java.util.ArrayList;
 
-public class CardStackRecyclerView extends AppCompatActivity {
+public class CardStackRecyclerView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private CardStackLayoutManager csManager;
     private CardStackRecyclerViewAdapter csAdapter;
     private ArrayList<IdeaDetails> csItems;
     private DatabaseReference csIdeaList;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    ImageButton menuToolbar;
+    Toolbar toolbar;
 
     private FirebaseAuth rvAuth;
 
@@ -40,6 +52,19 @@ public class CardStackRecyclerView extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_stack_recycler_view);
+
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        toolbar = findViewById(R.id.im_toolbar);
+
+        setSupportActionBar(toolbar);
+
+        navigationView.bringToFront();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(this);
 
         csItems = new ArrayList<>();
         rvAuth = FirebaseAuth.getInstance();
@@ -121,16 +146,6 @@ public class CardStackRecyclerView extends AppCompatActivity {
         cardStackView.setItemAnimator(new DefaultItemAnimator());
     }
 
-//    private ArrayList<IdeaDetails> addList() {
-//        ArrayList<IdeaDetails> items = new ArrayList<>();
-//        items.add(new IdeaDetails(R.drawable.pinder, "Pinder", "email", "Tinder for your pets", "Spot", "skills"));
-//        items.add(new IdeaDetails(R.drawable.room_designer, "Room Designer", "email", "Uses augmented reailty to help redesign your room", "John", "skills"));
-//        items.add(new IdeaDetails(R.drawable.pickup_sports, "Pickup Sports", "email", "Find athletes in your area to play pickup games with", "Ron", "skills here"));
-//        items.add(new IdeaDetails(R.drawable.digital_grafiti, "Digital Graffiti", "email", "Uses augmented reailty to tag locations around the world and see other's tags by holding your phone up to it", "Micbac", "skills here"));
-//        items.add(new IdeaDetails(R.drawable.battery_alarm, "Battery Alarm", "email", "Causes your phone's alarm to go off when it is at a given battery percentage", "Seveer Haon", "skills here"));
-//
-//        return items;
-//    }
 
     public void logoutUser(View view)  {
         rvAuth.signOut();
@@ -144,5 +159,34 @@ public class CardStackRecyclerView extends AppCompatActivity {
         Intent intent = new Intent(CardStackRecyclerView.this, NewIdeaActivity.class);
         startActivity(intent);
         return;
+    }
+
+    //Close the menu not the applciuation
+    @Override
+    public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.nav_home:
+                break;
+            case R.id.nav_add_idea:
+                Intent newIdeaIntent = new Intent(CardStackRecyclerView.this, NewIdeaActivity.class);
+                startActivity(newIdeaIntent);
+                break;
+            case R.id.nav_logout:
+                rvAuth.signOut();
+                Intent logoutIntent = new Intent(CardStackRecyclerView.this, MainActivity.class);
+                startActivity(logoutIntent);
+                finish();
+                break;
+        }
+        return true;
     }
 }

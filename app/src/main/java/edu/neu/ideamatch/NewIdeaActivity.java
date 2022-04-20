@@ -134,6 +134,7 @@ public class NewIdeaActivity extends AppCompatActivity {
         String description = niDescription.getText().toString();
         String desiredSkills = niDesiredSkills.getText().toString();
 
+        //Uploads the file and sets the imageURL in the database to the URI
         uploadFile(ideaName);
 
         //Get the user node for the value listener
@@ -175,31 +176,20 @@ public class NewIdeaActivity extends AppCompatActivity {
 
     private void uploadFile(String ideaName) {
         if (niImageUri != null) {
-
-            // Defining the child of storageReference
-            StorageReference ref
-                    = FirebaseStorage.getInstance().getReference().child("IdeaImages").child(System.currentTimeMillis() + "ideaName");
-
+            // Defining the storageReference
+            StorageReference ref = FirebaseStorage.getInstance().getReference().child("IdeaImages").child(System.currentTimeMillis() + "ideaName");
             // adding listeners on upload
-            // or failure of image
             ref.putFile(niImageUri)
                     .addOnSuccessListener(
                             new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
                                 @Override
                                 public void onSuccess(
                                         UploadTask.TaskSnapshot taskSnapshot)
                                 {
-                                    // Image uploaded successfully
-                                    // Dismiss dialog
-                                    Toast.makeText(NewIdeaActivity.this,
-                                                    "Image Uploaded!!",
-                                                    Toast.LENGTH_SHORT).show();
                                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             root.getReference().child("ProjectIdeas").child(ideaName).child("imageURL").setValue(uri.toString());
-//                                            root.getReference().child("ProjectIdeas").child(ideaName).child("imageURL").setValue(ref.toString());
                                         }
                                     });
                                 }
@@ -217,44 +207,4 @@ public class NewIdeaActivity extends AppCompatActivity {
                     });
         }
     }
-
-
-
-    private String getFileExtension(Uri uri) {
-        ContentResolver cR = getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
-    }
-
-//    if (niImageUri != null) {
-//        StorageReference imagepath = FirebaseStorage.getInstance().getReference().child("IdeaImages").child(System.currentTimeMillis() + "ideaName");
-//        Bitmap bitmap = null;
-//
-//        try {
-//            bitmap = MediaStore.Images.Media.getBitmap(getApplication().getContentResolver(), niImageUri);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-//        byte[] data = baos.toByteArray();
-//        UploadTask uploadTask = imagepath.putBytes(data);
-//        uploadTask.addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                finish();
-//            }
-//        });
-//        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                imageUri = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
-//                Task<Uri> test = imagepath.getDownloadUrl();
-//                String test2 = imagepath.toString();
-//            }
-//        });
-//    } else {
-//        finish();
-//    }
 }
