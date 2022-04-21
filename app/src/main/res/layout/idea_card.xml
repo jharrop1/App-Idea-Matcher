@@ -11,43 +11,122 @@
     app:cardCornerRadius="8dp"
     app:cardBackgroundColor="@android:color/white">
 
-    <ImageView
-        android:id="@+id/idea_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+
+<!--    <ImageView-->
+<!--        android:id="@+id/idea_image"-->
+<!--        android:layout_width="1000px"-->
+<!--        android:layout_height="1000px"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:layout_marginTop="48dp"-->
+<!--        android:scaleType="centerCrop"-->
+<!--        />-->
+
+<!--    <com.google.android.material.imageview.ShapeableImageView-->
+<!--        android:id="@+id/idea_image"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:adjustViewBounds="true"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:src="@drawable/bulb_icon"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        app:shapeAppearanceOverlay="@style/roundimageview"/>-->
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_gravity="top"
         android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/idea_image"
+            android:layout_width="1000px"
+            android:layout_height="1000px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="48dp"
+            android:scaleType="centerCrop"
+            />
 
         <TextView
             android:id="@+id/idea_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:textSize="26sp"/>
+            android:textColor="@android:color/black"
+            android:textSize="32sp"/>
+        <TextView
+            android:id="@+id/idea_description_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="Description"/>
 
         <TextView
             android:id="@+id/idea_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"/>
+            android:textColor="@android:color/black"
+            android:textSize="16sp"/>
 
         <TextView
-            android:id="@+id/idea_creator"
+            android:id="@+id/idea_desired_skills_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"/>
+            android:text="Desired Skills"/>
+
+        <TextView
+            android:id="@+id/idea_desired_skills_cv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/idea_project_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="0dp"/>
 
     </LinearLayout>
+
+<!--    <LinearLayout-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom"-->
+<!--        android:padding="16dp">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/idea_name"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:textSize="32sp"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/idea_description"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:textSize="20sp"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/idea_desired_skills_cv"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:textSize="20sp"/>-->
+
+<!--    </LinearLayout>-->
 
 </androidx.cardview.widget.CardView>

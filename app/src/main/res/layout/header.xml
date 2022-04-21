@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="match_parent"
-     android:layout_height="200dp"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
     android:orientation="vertical"
-    android:background="@drawable/home_icon"
+    android:background="?colorPrimary"
     android:gravity="bottom">
 
     <ImageView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:src="@drawable/add_idea"/>
+        android:layout_width="100sp"
+        android:layout_height="100sp"
+        android:src="@drawable/bulb_icon"
+        android:layout_gravity="center"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:text="IdeaMatch"
-        android:textSize="24sp"/>
+        android:textSize="32sp"
+        android:layout_gravity="center"
+        android:textColor="@color/black"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Finding creativty"
-        android:textSize="14sp"/>
+        android:text="Finding your creativty"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:textColor="@color/black"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

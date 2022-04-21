@@ -12,12 +12,9 @@
             android:title="Add New Idea" />
         <item
             android:id="@+id/nav_view_liked_ideas"
-            android:icon="@drawable/your_ideas_icon"
+            android:icon="@drawable/liked_ideas_icon"
             android:title="View your liked Ideas" />
-        <item
-            android:id="@+id/nav_logout"
-            android:icon="@drawable/logout_icon"
-            android:title="Logout" />
+
     </group>
 
 
@@ -25,30 +22,17 @@
         <menu>
             <group android:checkableBehavior="single">
                 <item
-                    android:id="@+id/nav_test_1"
-                    android:icon="@drawable/add_idea"
-                    android:title="Test 1" />
+                    android:id="@+id/nav_your_ideas"
+                    android:icon="@drawable/your_ideas_icon"
+                    android:title="View Your Ideas" />
                 <item
-                    android:id="@+id/nav_test_2"
-                    android:icon="@drawable/add_idea"
-                    android:title="Test 2" />
+                    android:id="@+id/nav_logout"
+                    android:icon="@drawable/logout_icon"
+                    android:title="Logout" />
             </group>
         </menu>
     </item>
 
-
-    <item android:title="Test title">
-        <menu>
-            <item
-                android:id="@+id/nav_test_4"
-                android:icon="@drawable/add_idea"
-                android:title="Test 4" />
-            <item
-                android:id="@+id/nav_test_5"
-                android:icon="@drawable/add_idea"
-                android:title="Test 5" />
-        </menu>
-    </item>
 
 
 </menu>

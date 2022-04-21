@@ -52,14 +52,15 @@ public class CardStackRecyclerViewAdapter extends RecyclerView.Adapter<CardStack
     class CardViewHolder extends RecyclerView.ViewHolder{
 
         ImageView vhImage;
-        TextView vhName, vhDescription, vhCreator;
+        TextView vhName, vhDescription, vhDesiredSkills, vhProjectId;
 
         CardViewHolder(@NonNull View itemView){
             super(itemView);
             vhImage = itemView.findViewById(R.id.idea_image);
             vhName = itemView.findViewById(R.id.idea_name);
             vhDescription = itemView.findViewById(R.id.idea_description);
-            vhCreator = itemView.findViewById(R.id.idea_creator);
+            vhDesiredSkills = itemView.findViewById(R.id.idea_desired_skills_cv);
+            vhProjectId = itemView.findViewById(R.id.idea_project_id);
         }
 
         void setIdea(IdeaDetails ideaData) {
@@ -71,7 +72,8 @@ public class CardStackRecyclerViewAdapter extends RecyclerView.Adapter<CardStack
                     .into(vhImage);
             vhName.setText(ideaData.getIdeaName());
             vhDescription.setText(ideaData.getIdeaDescription());
-            vhCreator.setText(ideaData.getCreatorName());
+            vhDesiredSkills.setText(ideaData.getDesiredSkills());
+            vhProjectId.setText(ideaData.getProjectID());
         }
     }
 }

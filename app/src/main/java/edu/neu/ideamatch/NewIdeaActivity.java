@@ -6,6 +6,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -28,6 +30,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -56,19 +59,6 @@ public class NewIdeaActivity extends AppCompatActivity {
     private DatabaseReference userNode;
     private StorageReference niStorageRef;
 
-//    ActivityResultLauncher<Intent> startForResultFromGallery = registerForActivityResult(
-//            new ActivityResultContracts.StartActivityForResult(),
-//            new ActivityResultCallback<Uri>() {
-//                @Override
-//                public void onActivityResult(Uri uri) {
-//                    if (result.getResultCode() == Activity.RESULT_OK) {
-//                        // There are no request codes
-//                        Intent data = result.getData();
-//                        doSomeOperations();
-//                    }
-//                }
-//            });
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,10 +76,15 @@ public class NewIdeaActivity extends AppCompatActivity {
 
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        //Get the user node for the value listener
+        userNode = root.getReference().child("Users").child(userID);
+
+        String key = root.getReference().child("ProjectIdeas").push().getKey();
+
         niCreateNewIdea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewIdea(userID);
+                createNewIdea(userID, userNode, key);
             }
         });
 
@@ -127,7 +122,7 @@ public class NewIdeaActivity extends AppCompatActivity {
     }
 
 
-    private void createNewIdea(String userID) {
+    private void createNewIdea(String userID, DatabaseReference userNode, String key) {
         //TODO Check if things are null if needed
         //Get the text from the detail boxes
         String ideaName = niIdeaName.getText().toString();
@@ -135,17 +130,14 @@ public class NewIdeaActivity extends AppCompatActivity {
         String desiredSkills = niDesiredSkills.getText().toString();
 
         //Uploads the file and sets the imageURL in the database to the URI
-        uploadFile(ideaName);
 
-        //Get the user node for the value listener
-        userNode = root.getReference().child("Users").child(userID);
 
         //Getting the email and name from the currently logged in user
-        userNode.addValueEventListener(new ValueEventListener() {
+        userNode.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String email = snapshot.child("email").getKey().toString();
-                String creatorName = snapshot.child("userName").getKey().toString();
+                String email = snapshot.child("email").getValue().toString();
+                String creatorName = snapshot.child("userName").getValue().toString();
 
 
                 IdeaDetails newIdea = new IdeaDetails(
@@ -153,16 +145,20 @@ public class NewIdeaActivity extends AppCompatActivity {
                         email,
                         description,
                         creatorName,
-                        desiredSkills);
+                        desiredSkills,
+                        key);
                 //Adding the idea to the database and makes a succesful toast if it works
-                root.getReference().child("ProjectIdeas").child(ideaName).setValue(newIdea)
+                userNode.child("yourIdeas").child(key).setValue(ideaName);
+                root.getReference().child("ProjectIdeas").child(key).setValue(newIdea)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
+                                uploadFile(key);
                                 Toast.makeText(NewIdeaActivity.this,
                                         "Idea was successfully added",
                                         Toast.LENGTH_SHORT).show();
 
+                                return;
                             }
                         });
             }
@@ -172,9 +168,11 @@ public class NewIdeaActivity extends AppCompatActivity {
 
             }
         });
+        //Instead of returning home could return to app details page
+        returnHome();
     }
 
-    private void uploadFile(String ideaName) {
+    private void uploadFile(String key) {
         if (niImageUri != null) {
             // Defining the storageReference
             StorageReference ref = FirebaseStorage.getInstance().getReference().child("IdeaImages").child(System.currentTimeMillis() + "ideaName");
@@ -189,7 +187,7 @@ public class NewIdeaActivity extends AppCompatActivity {
                                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                         @Override
                                         public void onSuccess(Uri uri) {
-                                            root.getReference().child("ProjectIdeas").child(ideaName).child("imageURL").setValue(uri.toString());
+                                            root.getReference().child("ProjectIdeas").child(key).child("imageURL").setValue(uri.toString());
                                         }
                                     });
                                 }
@@ -206,5 +204,10 @@ public class NewIdeaActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void returnHome() {
+        Intent intent = new Intent(NewIdeaActivity.this, CardStackRecyclerView.class);
+        startActivity(intent);
     }
 }

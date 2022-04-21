@@ -5,37 +5,45 @@ import android.net.Uri;
 public class IdeaDetails {
 //    private int image;
     private String imageURL;
-    private String ideaName, ideaDescription, creatorName, desiredSkills, contactInfo;
+    private String ideaName;
+    private String ideaDescription;
+    private String creatorName;
+    private String desiredSkills;
+    private String contactInfo;
+
+    private String projectID;
 
     public IdeaDetails() {
     }
 
-    //constructer with string for image
-    public IdeaDetails(String cimageURL,
-                       String cideaName,
-                       String ccontactInfo,
-                       String cideaDescription,
-                       String ccreatorName,
-                       String cdesiredSkills) {
-        this.imageURL = cimageURL;
-        this.ideaName = cideaName;
-        this.contactInfo = ccontactInfo;
-        this.ideaDescription = cideaDescription;
-        this.creatorName = ccreatorName;
-        this.desiredSkills = cdesiredSkills;
-    }
+//    //constructer with string for image
+//    public IdeaDetails(String cimageURL,
+//                       String cideaName,
+//                       String ccontactInfo,
+//                       String cideaDescription,
+//                       String ccreatorName,
+//                       String cdesiredSkills) {
+//        this.imageURL = cimageURL;
+//        this.ideaName = cideaName;
+//        this.contactInfo = ccontactInfo;
+//        this.ideaDescription = cideaDescription;
+//        this.creatorName = ccreatorName;
+//        this.desiredSkills = cdesiredSkills;
+//    }
 
     public IdeaDetails(
                        String cideaName,
                        String ccontactInfo,
                        String cideaDescription,
                        String ccreatorName,
-                       String cdesiredSkills) {
+                       String cdesiredSkills,
+                       String cprojectID) {
         this.ideaName = cideaName;
         this.contactInfo = ccontactInfo;
         this.ideaDescription = cideaDescription;
         this.creatorName = ccreatorName;
         this.desiredSkills = cdesiredSkills;
+        this.projectID = cprojectID;
     }
 
 //    //Constructer with an int for image
@@ -76,6 +84,14 @@ public class IdeaDetails {
 //    public void setImage(int image) {
 //        this.image = image;
 //    }
+
+    public String getProjectID() {
+        return projectID;
+    }
+
+    public void setProjectID(String projectID) {
+        this.projectID = projectID;
+    }
 
     public String getIdeaName() {
         return ideaName;

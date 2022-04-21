@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -34,17 +35,22 @@ import com.yuyakaido.android.cardstackview.StackFrom;
 import com.yuyakaido.android.cardstackview.SwipeableMethod;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class CardStackRecyclerView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "CardStackRecyclerView";
 
     private CardStackLayoutManager csManager;
     private CardStackRecyclerViewAdapter csAdapter;
     private ArrayList<IdeaDetails> csItems;
     private DatabaseReference csIdeaList;
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
-    ImageButton menuToolbar;
-    Toolbar toolbar;
+    private DatabaseReference userNode;
+    private FirebaseDatabase root;
+    private String userID, projectID, ideaName;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
 
     private FirebaseAuth rvAuth;
 
@@ -71,6 +77,13 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
         FirebaseUser rvUser = FirebaseAuth.getInstance().getCurrentUser();
         csIdeaList = FirebaseDatabase.getInstance().getReference("ProjectIdeas");
 
+        root = FirebaseDatabase.getInstance();
+
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        //Get the user node for the value listener
+        userNode = root.getReference().child("Users").child(userID);
+
 
         //When a new idea is added it sees the change and notifies the list
         csIdeaList.addValueEventListener(new ValueEventListener() {
@@ -79,6 +92,7 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     IdeaDetails idea = dataSnapshot.getValue(IdeaDetails.class);
                     csItems.add(idea);
+                    Collections.shuffle(csItems);
                 }
                 csAdapter.notifyDataSetChanged();
             }
@@ -100,6 +114,7 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
             public void onCardSwiped(Direction direction) {
                 if (direction == Direction.Right){
                     Toast.makeText(CardStackRecyclerView.this, "Direction Right", Toast.LENGTH_SHORT).show();
+                    userNode.child("likedIdeas").child(projectID).setValue(ideaName);
                     //Make it take the user to an ideaDetails page about the idea information
                     //Add it to a list of ideas liked by the user
                 }
@@ -122,7 +137,10 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
 
             @Override
             public void onCardAppeared(View view, int position) {
-                TextView cardTv = view.findViewById(R.id.idea_name);
+                TextView cardTvName = view.findViewById(R.id.idea_name);
+                TextView cardTvProjectID = view.findViewById(R.id.idea_project_id);
+                ideaName = cardTvName.getText().toString();
+                projectID = cardTvProjectID.getText().toString();
             }
 
             @Override
@@ -155,11 +173,6 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
         return;
     }
 
-    public void openAddIdeaActivity(View view)  {
-        Intent intent = new Intent(CardStackRecyclerView.this, NewIdeaActivity.class);
-        startActivity(intent);
-        return;
-    }
 
     //Close the menu not the applciuation
     @Override
@@ -179,6 +192,14 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
             case R.id.nav_add_idea:
                 Intent newIdeaIntent = new Intent(CardStackRecyclerView.this, NewIdeaActivity.class);
                 startActivity(newIdeaIntent);
+                break;
+            case R.id.nav_view_liked_ideas:
+                Intent newLikedIdeasIntent = new Intent(CardStackRecyclerView.this, LikedIdeasRecyclerView.class);
+                startActivity(newLikedIdeasIntent);
+                break;
+            case R.id.nav_your_ideas:
+                Intent newYourIdeasIntent = new Intent(CardStackRecyclerView.this, YourIdeaRecyclerView.class);
+                startActivity(newYourIdeasIntent);
                 break;
             case R.id.nav_logout:
                 rvAuth.signOut();
