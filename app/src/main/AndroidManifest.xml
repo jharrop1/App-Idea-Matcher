@@ -13,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IdeaMatch">
         <activity
+            android:name=".EditYourIdeaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".YourIdeaDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".LikedIdeaDetailsActivity"
             android:exported="false" />
         <activity

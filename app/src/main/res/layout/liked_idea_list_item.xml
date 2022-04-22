@@ -6,47 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="20dp"
-    android:layout_marginBottom="10dp"
-    >
-
-
-<!--    Could do a linear view here-->
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
-<!--        -->
-<!--        <ImageView-->
-<!--            android:id="@+id/liked_idea_logo"-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="100dp"-->
-<!--            android:layout_marginStart="16dp"-->
-<!--            android:layout_marginTop="8dp"-->
-<!--            android:layout_marginBottom="8dp"-->
-<!--            android:src="@drawable/tbd"/>-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/liked_idea_name"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="16dp"-->
-<!--                android:layout_marginTop="16dp"-->
-<!--                android:text="IdeaName"/>-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/liked_idea_description"-->
-<!--                android:layout_width="265dp"-->
-<!--                android:layout_height="63dp"-->
-<!--                android:layout_marginStart="16dp"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:text="Description" />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/liked_idea_project_id"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="0dp"/>-->
-<!--        -->
-<!--    </LinearLayout>-->
+    android:layout_marginBottom="10dp">
 
     <ImageView
         android:id="@+id/liked_idea_logo"
@@ -56,8 +16,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/tbd"
-/>
+        android:src="@drawable/tbd" />
 
     <LinearLayout
         android:layout_width="match_parent"

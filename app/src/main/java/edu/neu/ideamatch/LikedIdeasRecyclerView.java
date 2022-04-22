@@ -19,13 +19,6 @@ import java.util.ArrayList;
 
 public class LikedIdeasRecyclerView extends AppCompatActivity {
 
-//    String userID;
-//    RecyclerView liRecyclverView;
-//    DatabaseReference likedIdeasDatabase;
-//    LikedIdeasRecyclerViewAdapter myLikedIdeasAdapter;
-//    ArrayList<IdeaDetails> liIdeaList;
-//    ArrayList<String> liProjectIds;
-
     private RecyclerView liRecyclerView;
     private RecyclerView.Adapter likedIdeasAdapter;
     private RecyclerView.LayoutManager likedIdeasLayoutManager;
@@ -128,32 +121,3 @@ public class LikedIdeasRecyclerView extends AppCompatActivity {
         });
     }
 }
-
-
-//        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//                liRecyclverView = findViewById(R.id.rv_liked_ideas);
-//                likedIdeasDatabase = FirebaseDatabase.getInstance().getReference("users").child(userID).child("likedIdeas");
-//                liRecyclverView.setLayoutManager((new LinearLayoutManager(this)));
-//
-//                liIdeaList = new ArrayList<>();
-//        myLikedIdeasAdapter = new LikedIdeasRecyclerViewAdapter(this, liIdeaList);
-//        liRecyclverView.setAdapter(myLikedIdeasAdapter);
-//
-//        likedIdeasDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-//@Override
-//public void onDataChange(@NonNull DataSnapshot snapshot) {
-//        if (snapshot.exists()) {
-//        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//        String projectID = dataSnapshot.getKey();
-//        liProjectIds.add(projectID);
-//        }
-//        }
-//        myLikedIdeasAdapter.notifyDataSetChanged();
-//        }
-//
-//
-//@Override
-//public void onCancelled(@NonNull DatabaseError error) {
-//
-//        }
-//        });

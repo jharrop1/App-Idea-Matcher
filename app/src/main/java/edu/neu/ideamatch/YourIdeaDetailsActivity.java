@@ -2,68 +2,65 @@ package edu.neu.ideamatch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+public class YourIdeaDetailsActivity extends AppCompatActivity {
 
-public class YourIdeaRecyclerView extends AppCompatActivity {
-
-    private RecyclerView yiRecyclerView;
-    private RecyclerView.Adapter yourIdeasAdapter;
-    private RecyclerView.LayoutManager yourIdeasLayoutManager;
-    private ArrayList<IdeaDetails> yourIdeasList = new ArrayList<IdeaDetails>();
-
-    private String userID;
+    private String projectID;
+    private TextView yidIdeaName, yidCreatorName, yidDescription, yidDesiredSkills,
+            yidContactInfoTitle, yidContactInfo;
+    private ImageView yidImageLogo;
+    private Button yiEdit;
+    private IdeaDetails yidIdeaDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_your_idea_recycler_view);
+        setContentView(R.layout.activity_your_idea_details);
 
-        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        yiRecyclerView = (RecyclerView) findViewById(R.id.rv_your_ideas);
-        //If scrolling doesn't work add scrolling on the layout resource file
-        yiRecyclerView.setNestedScrollingEnabled(false);
-        yiRecyclerView.setHasFixedSize(true);
-        yourIdeasLayoutManager = new LinearLayoutManager(YourIdeaRecyclerView.this);
-        yiRecyclerView.setLayoutManager( yourIdeasLayoutManager);
-        yourIdeasAdapter = new YourIdeaRecyclerViewAdapter(YourIdeaRecyclerView.this, getDataYourProjects());
-        yiRecyclerView.setAdapter(yourIdeasAdapter);
-
-        getProjectID();
-
-    }
-
-
-    private ArrayList<IdeaDetails> getDataYourProjects () {
-        return yourIdeasList;
-    }
-
-    private void getProjectID() {
-        DatabaseReference yourIdeasDB = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("yourIdeas");
-        yourIdeasDB.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()) {
-                    for(DataSnapshot yourIdea : snapshot.getChildren()) {
-                        getProject(yourIdea.getKey());
-                    }
-                }
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                projectID= null;
+            } else {
+                projectID= extras.getString("projectID");
             }
+        } else {
+            projectID = (String) savedInstanceState.getSerializable("projectID");
+        }
 
+        yidIdeaName = (TextView) findViewById(R.id.your_idea_details_idea_name);
+        yidCreatorName = (TextView) findViewById(R.id.your_idea_details_creator_name);
+        yidDescription = (TextView) findViewById(R.id.your_idea_details_idea_description);
+        yidDesiredSkills = (TextView) findViewById(R.id.your_idea_details_desired_skills);
+        yidContactInfoTitle = (TextView) findViewById(R.id.your_idea_details_contact_info_title);
+        yidContactInfo = (TextView) findViewById(R.id.your_idea_details_contact_info);
+        yidImageLogo = (ImageView) findViewById(R.id.your_idea_details_image);
+        yiEdit = (Button) findViewById(R.id.edit_your_idea);
+
+        getProject(projectID);
+
+        yiEdit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), EditYourIdeaActivity.class);
+                Bundle ideaBundle = new Bundle();
+                ideaBundle.putString("projectID", projectID);
+                intent.putExtras(ideaBundle);
+                view.getContext().startActivity(intent);
 
             }
         });
@@ -101,22 +98,35 @@ public class YourIdeaRecyclerView extends AppCompatActivity {
                     if(snapshot.child("imageURL").getValue() != null) {
                         ideaImageURL = snapshot.child("imageURL").getValue().toString();
                     }
-                    IdeaDetails ideaDetailObject = new IdeaDetails(ideaName,
+                    yidIdeaDetails = new IdeaDetails(ideaName,
                             ideaContactInfo,
                             ideaDescription,
                             ideaCreatorName,
                             ideaDesiredSkills,
                             ideaID,
                             ideaImageURL);
-                    yourIdeasList.add(ideaDetailObject);
-                    yourIdeasAdapter.notifyDataSetChanged();
+
+                    setYourIdeaDetailsInformation(yidIdeaDetails);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+    }
+
+    private void setYourIdeaDetailsInformation(IdeaDetails ideaDetails) {
+        yidIdeaName.setText(ideaDetails.getIdeaName());
+        yidCreatorName.setText(ideaDetails.getCreatorName());
+        yidDescription.setText(ideaDetails.getIdeaDescription());
+        yidDesiredSkills.setText(ideaDetails.getDesiredSkills());
+        yidContactInfoTitle.setText("Reach out to " + ideaDetails.getCreatorName() + " at:");
+        yidContactInfo.setText(ideaDetails.getContactInfo());
+        Picasso.get()
+                .load(ideaDetails.getImageURL())
+                .fit()
+                .centerCrop()
+                .into(yidImageLogo);
     }
 }
