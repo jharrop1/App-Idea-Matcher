@@ -16,20 +16,22 @@ public class IdeaDetails {
     public IdeaDetails() {
     }
 
-//    //constructer with string for image
-//    public IdeaDetails(String cimageURL,
-//                       String cideaName,
-//                       String ccontactInfo,
-//                       String cideaDescription,
-//                       String ccreatorName,
-//                       String cdesiredSkills) {
-//        this.imageURL = cimageURL;
-//        this.ideaName = cideaName;
-//        this.contactInfo = ccontactInfo;
-//        this.ideaDescription = cideaDescription;
-//        this.creatorName = ccreatorName;
-//        this.desiredSkills = cdesiredSkills;
-//    }
+    //constructer with string for image
+    public IdeaDetails(String cideaName,
+                       String ccontactInfo,
+                       String cideaDescription,
+                       String ccreatorName,
+                       String cdesiredSkills,
+                       String cprojectID,
+                       String cimageURL) {
+        this.ideaName = cideaName;
+        this.contactInfo = ccontactInfo;
+        this.ideaDescription = cideaDescription;
+        this.creatorName = ccreatorName;
+        this.desiredSkills = cdesiredSkills;
+        this.projectID = cprojectID;
+        this.imageURL = cimageURL;
+    }
 
     public IdeaDetails(
                        String cideaName,
@@ -46,20 +48,7 @@ public class IdeaDetails {
         this.projectID = cprojectID;
     }
 
-//    //Constructer with an int for image
-//    public IdeaDetails(int cimage,
-//                       String cideaName,
-//                       String ccontactInfo,
-//                       String cideaDescription,
-//                       String ccreatorName,
-//                       String cdesiredSkills) {
-//        this.image = cimage;
-//        this.ideaName = cideaName;
-//        this.contactInfo = ccontactInfo;
-//        this.ideaDescription = cideaDescription;
-//        this.creatorName = ccreatorName;
-//        this.desiredSkills = cdesiredSkills;
-//    }
+
 
     public String getImageURL() {
         return imageURL;

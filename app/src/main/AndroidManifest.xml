@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IdeaMatch">
         <activity
+            android:name=".LikedIdeaDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".YourIdeaRecyclerView"
             android:exported="false" />
         <activity
