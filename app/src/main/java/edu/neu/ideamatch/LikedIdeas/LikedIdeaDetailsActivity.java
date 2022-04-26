@@ -1,4 +1,4 @@
-package edu.neu.ideamatch;
+package edu.neu.ideamatch.LikedIdeas;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import edu.neu.ideamatch.IdeaDetails;
+import edu.neu.ideamatch.R;
 
 public class LikedIdeaDetailsActivity extends AppCompatActivity {
     private String projectID, creatorName;
@@ -51,7 +54,7 @@ public class LikedIdeaDetailsActivity extends AppCompatActivity {
 
     private void getProject(String key) {
         DatabaseReference projectDB = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas").child(key);
-        projectDB.addListenerForSingleValueEvent(new ValueEventListener() {
+        projectDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {

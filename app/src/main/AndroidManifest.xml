@@ -3,7 +3,12 @@
     package="edu.neu.ideamatch">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -12,29 +17,30 @@
         android:roundIcon="@mipmap/idea_match_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.IdeaMatch">
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/file_paths" />
+
         <activity
-            android:name=".EditYourIdeaActivity"
+            android:name=".YourIdeas.EditYourIdeaActivity"
             android:exported="false" />
         <activity
-            android:name=".YourIdeaDetailsActivity"
+            android:name=".YourIdeas.YourIdeaDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".LikedIdeaDetailsActivity"
+            android:name=".LikedIdeas.LikedIdeaDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".YourIdeaRecyclerView"
+            android:name=".YourIdeas.YourIdeaRecyclerView"
             android:exported="false" />
         <activity
-            android:name=".LikedIdeasRecyclerView"
+            android:name=".LikedIdeas.LikedIdeasRecyclerView"
             android:exported="false" />
         <activity
             android:name=".NewIdeaActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistrationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
+            android:name=".Login.RegistrationActivity"
             android:exported="false" />
         <activity
             android:name=".CardStackRecyclerViewAdapter"
@@ -43,7 +49,7 @@
             android:name=".CardStackRecyclerView"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Login.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,6 +57,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

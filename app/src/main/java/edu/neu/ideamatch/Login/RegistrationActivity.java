@@ -1,4 +1,4 @@
-package edu.neu.ideamatch;
+package edu.neu.ideamatch.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +18,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class RegistrationActivity extends AppCompatActivity {
+import edu.neu.ideamatch.CardStackRecyclerView;
+import edu.neu.ideamatch.R;
+import edu.neu.ideamatch.User;
+
+public class RegistrationActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     private Button regRegisterButton;
     private EditText regEmail, regPassword, regUserName;
@@ -33,24 +37,26 @@ public class RegistrationActivity extends AppCompatActivity {
 
         regAuth = FirebaseAuth.getInstance();
 
-        firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    //User is logged in it sends it to mainActivity
-                    Intent intent = new Intent(RegistrationActivity.this, CardStackRecyclerView.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        };
+//        firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                if (user != null) {
+//                    //User is logged in it sends it to mainActivity
+//                    Intent intent = new Intent(RegistrationActivity.this, CardStackRecyclerView.class);
+//                    startActivity(intent);
+//                    finish();
+//                }
+//            }
+//        };
 
         regRegisterButton = (Button) findViewById(R.id.register_account);
 
         regEmail = (EditText) findViewById(R.id.registration_email);
         regPassword = (EditText) findViewById(R.id.registration_password);
         regUserName = (EditText) findViewById(R.id.registration_username);
+
+        regUserName.requestFocus();
 
         regRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,13 +118,24 @@ public class RegistrationActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        regAuth.addAuthStateListener(firebaseAuthStateListener);
+        FirebaseAuth.getInstance().addAuthStateListener(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        regAuth.removeAuthStateListener(firebaseAuthStateListener);
+        FirebaseAuth.getInstance().removeAuthStateListener(this);
+    }
+
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            //User is logged in it sends it to mainActivity
+            Intent intent = new Intent(RegistrationActivity.this, CardStackRecyclerView.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
 }

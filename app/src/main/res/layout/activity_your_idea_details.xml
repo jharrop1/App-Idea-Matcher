@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".YourIdeaDetailsActivity">
+    tools:context=".YourIdeas.YourIdeaDetailsActivity">
 
     <ImageView
         android:id="@+id/your_idea_details_image"
@@ -109,6 +109,7 @@
         android:id="@+id/edit_your_idea"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:text="Edit Your Idea"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

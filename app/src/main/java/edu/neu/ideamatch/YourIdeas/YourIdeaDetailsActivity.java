@@ -1,4 +1,4 @@
-package edu.neu.ideamatch;
+package edu.neu.ideamatch.YourIdeas;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +16,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import edu.neu.ideamatch.IdeaDetails;
+import edu.neu.ideamatch.R;
 
 public class YourIdeaDetailsActivity extends AppCompatActivity {
 
@@ -68,7 +71,7 @@ public class YourIdeaDetailsActivity extends AppCompatActivity {
 
     private void getProject(String key) {
         DatabaseReference projectDB = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas").child(key);
-        projectDB.addListenerForSingleValueEvent(new ValueEventListener() {
+        projectDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -128,5 +131,10 @@ public class YourIdeaDetailsActivity extends AppCompatActivity {
                 .fit()
                 .centerCrop()
                 .into(yidImageLogo);
+    }
+
+    public void onBackPressed() {
+        Intent newYourIdeasIntent = new Intent(YourIdeaDetailsActivity.this, YourIdeaRecyclerView.class);
+        startActivity(newYourIdeasIntent);
     }
 }

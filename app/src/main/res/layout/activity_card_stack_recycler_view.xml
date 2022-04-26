@@ -18,6 +18,7 @@
         app:menu="@menu/main_menu"
         android:layout_gravity="start">
 
+
     </com.google.android.material.navigation.NavigationView>
 
 
@@ -42,5 +43,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/out_of_ideas"
+            android:text="We're all out of ideas for now, please come back later"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -1,4 +1,4 @@
-package edu.neu.ideamatch;
+package edu.neu.ideamatch.LikedIdeas;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import edu.neu.ideamatch.IdeaDetails;
+import edu.neu.ideamatch.R;
 
 public class LikedIdeasRecyclerViewAdapter extends RecyclerView.Adapter<LikedIdeasRecyclerViewAdapter.LikedIdeasViewHolder> {
     private Context likedIdeasContext;

@@ -1,38 +1,31 @@
 package edu.neu.ideamatch;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.content.FileProvider;
 
-import android.content.ContentResolver;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.internal.Storage;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,10 +36,15 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.util.Date;
+
+import edu.neu.ideamatch.YourIdeas.EditYourIdeaActivity;
+import edu.neu.ideamatch.YourIdeas.YourIdeaRecyclerView;
 
 public class NewIdeaActivity extends AppCompatActivity {
-    private String userID, imageUri;
+    private String userID, imageUri, currentPhotoPath;
     private EditText niIdeaName, niDescription, niDesiredSkills;
     private Button niCreateNewIdea, niSelectImage;
     private ImageView niImage;
@@ -54,10 +52,12 @@ public class NewIdeaActivity extends AppCompatActivity {
     private Task<Uri> downloadUri;
 
     private static final int PICK_IMAGE_REQUEST = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
 
     private FirebaseDatabase root;
     private DatabaseReference userNode;
     private StorageReference niStorageRef;
+    private boolean imageSelected = false;
 
 
     @Override
@@ -91,9 +91,28 @@ public class NewIdeaActivity extends AppCompatActivity {
         niImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, PICK_IMAGE_REQUEST);
+                AlertDialog.Builder imageAlert = new AlertDialog.Builder(NewIdeaActivity.this);
+                imageAlert.setTitle("Select Image");
+                imageAlert.setMessage("How would you like to select your image?");
+                imageAlert.setPositiveButton("From Images", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        Intent selectPhotoIntent = new Intent(Intent.ACTION_PICK);
+                        selectPhotoIntent.setType("image/*");
+                        startActivityForResult(selectPhotoIntent, PICK_IMAGE_REQUEST);
+                        dialogInterface.dismiss();
+                    }
+                });
+                imageAlert.setNegativeButton("Take Photo", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dispatchTakePictureIntent();
+//                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//                        dialogInterface.dismiss();
+                    }
+                });
+                imageAlert.show();
             }
         });
     }
@@ -118,8 +137,87 @@ public class NewIdeaActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             niImage.setImageURI(niImageUri);
+            imageSelected = true;
+        }
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK
+                && data != null) {
+            //TODO need to save the file to get a URI it looks like
+//            Bundle extras = data.getExtras();
+//            Bitmap imageBitmap = (Bitmap) extras.get("data");
+//            niImage.setImageBitmap(imageBitmap);
+
+            setPic();
+            //niImage.setImageURI(niImageUri);
+
         }
     }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                niImageUri = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, niImageUri);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                imageSelected = true;
+            }
+        }
+    }
+
+    private void setPic() {
+        // Get the dimensions of the View
+        int targetW = niImage.getWidth();
+        int targetH = niImage.getHeight();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+
+        BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.max(1, Math.min(photoW/targetW, photoH/targetH));
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+        niImage.setImageBitmap(bitmap);
+    }
+
 
 
     private void createNewIdea(String userID, DatabaseReference userNode, String key) {
@@ -128,9 +226,30 @@ public class NewIdeaActivity extends AppCompatActivity {
         String ideaName = niIdeaName.getText().toString();
         String description = niDescription.getText().toString();
         String desiredSkills = niDesiredSkills.getText().toString();
+        String image = niImage.toString();
 
-        //Uploads the file and sets the imageURL in the database to the URI
+        //Ensure the information is input
+        if(ideaName.isEmpty()) {
+            niIdeaName.setError("Valid email is required");
+            niIdeaName.requestFocus();
+            return;
+        }
 
+        if(description.isEmpty()) {
+            niDescription.setError("Valid email is required");
+            niDescription.requestFocus();
+            return;
+        }
+
+        if(desiredSkills.isEmpty()) {
+            niDesiredSkills.setError("Valid email is required");
+            niDesiredSkills.requestFocus();
+            return;
+        }
+
+        if(!imageSelected) {
+            niImageUri = Uri.parse("android.resource://edu.neu.ideamatch/" + R.drawable.tbd2);
+        }
 
         //Getting the email and name from the currently logged in user
         userNode.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -138,7 +257,7 @@ public class NewIdeaActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String email = snapshot.child("email").getValue().toString();
                 String creatorName = snapshot.child("userName").getValue().toString();
-
+                //String downURIforIdea = uploadFile(key);
 
                 IdeaDetails newIdea = new IdeaDetails(
                         ideaName,
@@ -153,7 +272,7 @@ public class NewIdeaActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
-                                uploadFile(key);
+                                uploadFile(key, ideaName);
                                 Toast.makeText(NewIdeaActivity.this,
                                         "Idea was successfully added",
                                         Toast.LENGTH_SHORT).show();
@@ -169,13 +288,14 @@ public class NewIdeaActivity extends AppCompatActivity {
             }
         });
         //Instead of returning home could return to app details page
-        returnHome();
+        goToYourIdeasRV();
     }
 
-    private void uploadFile(String key) {
+    private void uploadFile(String key, String ideaName) {
         if (niImageUri != null) {
+
             // Defining the storageReference
-            StorageReference ref = FirebaseStorage.getInstance().getReference().child("IdeaImages").child(System.currentTimeMillis() + "ideaName");
+            StorageReference ref = FirebaseStorage.getInstance().getReference().child("IdeaImages").child(System.currentTimeMillis() + ideaName);
             // adding listeners on upload
             ref.putFile(niImageUri)
                     .addOnSuccessListener(
@@ -206,8 +326,9 @@ public class NewIdeaActivity extends AppCompatActivity {
         }
     }
 
-    private void returnHome() {
-        Intent intent = new Intent(NewIdeaActivity.this, CardStackRecyclerView.class);
+    private void goToYourIdeasRV() {
+        Intent intent = new Intent(NewIdeaActivity.this, YourIdeaRecyclerView.class);
         startActivity(intent);
     }
+
 }

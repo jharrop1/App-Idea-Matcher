@@ -8,14 +8,12 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +35,10 @@ import com.yuyakaido.android.cardstackview.SwipeableMethod;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import edu.neu.ideamatch.LikedIdeas.LikedIdeasRecyclerView;
+import edu.neu.ideamatch.Login.MainActivity;
+import edu.neu.ideamatch.YourIdeas.YourIdeaRecyclerView;
+
 public class CardStackRecyclerView extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "CardStackRecyclerView";
@@ -44,10 +46,13 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
     private CardStackLayoutManager csManager;
     private CardStackRecyclerViewAdapter csAdapter;
     private ArrayList<IdeaDetails> csItems;
+    private ArrayList<String> projectIDList = new ArrayList<String>();
     private DatabaseReference csIdeaList;
     private DatabaseReference userNode;
     private FirebaseDatabase root;
     private String userID, projectID, ideaName;
+    private TextView outofideas;
+
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
@@ -59,19 +64,18 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_stack_recycler_view);
 
+        //Sets up the toolbar with onback pressed and navitemselected methods
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.im_toolbar);
-
         setSupportActionBar(toolbar);
-
         navigationView.bringToFront();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Start of array list
         csItems = new ArrayList<>();
         rvAuth = FirebaseAuth.getInstance();
         FirebaseUser rvUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -80,6 +84,10 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
         root = FirebaseDatabase.getInstance();
 
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        if(csItems!=null){
+            csItems.clear();
+        }
 
         //Get the user node for the value listener
         userNode = root.getReference().child("Users").child(userID);
@@ -91,7 +99,9 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     IdeaDetails idea = dataSnapshot.getValue(IdeaDetails.class);
-                    csItems.add(idea);
+                    if(idea.getImageURL() != null) {
+                        csItems.add(idea);
+                    }
                     Collections.shuffle(csItems);
                 }
                 csAdapter.notifyDataSetChanged();
@@ -122,7 +132,11 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
                     Toast.makeText(CardStackRecyclerView.this, "Direction Left", Toast.LENGTH_SHORT).show();
                 }
 
-                //Can add in code here to check if you are running out of ideas
+                if (csManager.getTopPosition() == csAdapter.getItemCount()){
+                    outofideas = (TextView) findViewById(R.id.out_of_ideas);
+                    outofideas.setVisibility(View.VISIBLE);
+                }
+
             }
 
             @Override

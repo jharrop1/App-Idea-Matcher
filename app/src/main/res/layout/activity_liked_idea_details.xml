@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="32dp"
-    tools:context=".LikedIdeaDetailsActivity">
+    tools:context=".LikedIdeas.LikedIdeaDetailsActivity">
 
     <ImageView
         android:id="@+id/liked_idea_details_image"

@@ -6,67 +6,147 @@
     android:layout_height="match_parent"
     tools:context=".NewIdeaActivity">
 
-    <Button
-        android:id="@+id/create_new_idea"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="Create New Idea"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <ImageView
+        android:id="@+id/uploaded_image"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:src="@mipmap/select_image_round"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/select_image_foreground" />
 
     <EditText
         android:id="@+id/new_idea_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:ems="10"
-        android:hint="Enter your idea Name!"
-        android:textColorHint="@color/dark_grey_hint"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="24dp"
+        android:hint="Idea Name"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:maxLength="20"
+        app:layout_constraintBottom_toBottomOf="@+id/uploaded_image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/uploaded_image" />
+
+    <TextView
+        android:id="@+id/idea_description_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="Description"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uploaded_image"/>
 
     <EditText
         android:id="@+id/new_idea_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:hint="Enter your idea's description."
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/idea_description_title"/>
+
+    <TextView
+        android:id="@+id/your_idea_details_desired_skills_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="Enter a brief description about your idea"
-        android:textColorHint="@color/dark_grey_hint"
-        android:inputType="textMultiLine"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:text="Desired Skills"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uploaded_image" />
+        app:layout_constraintTop_toBottomOf="@+id/new_idea_description"/>
 
     <EditText
         android:id="@+id/new_idea_desired_skills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:hint="Put desired skills in partners here."
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/your_idea_details_desired_skills_title"/>
+
+    <Button
+        android:id="@+id/create_new_idea"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        android:hint="Add the desired skills of partners"
-        android:textColorHint="@color/dark_grey_hint"
-        app:layout_constraintBottom_toTopOf="@+id/create_new_idea"
+        android:layout_marginBottom="24dp"
+        android:text="Create New Idea"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_idea_description" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/uploaded_image"
-        android:layout_width="100sp"
-        android:layout_height="100sp"
-        android:layout_marginTop="32dp"
-        android:src="@mipmap/select_image_round"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_idea_name" />
+<!--    <Button-->
+<!--        android:id="@+id/create_new_idea"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="32dp"-->
+<!--        android:text="Create New Idea"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.498"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/new_idea_name"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="60dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Enter your idea Name!"-->
+<!--        android:textColorHint="@color/dark_grey_hint"-->
+<!--        android:inputType="textPersonName"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/new_idea_description"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:ems="10"-->
+<!--        android:gravity="start|top"-->
+<!--        android:hint="Enter a brief description about your idea"-->
+<!--        android:textColorHint="@color/dark_grey_hint"-->
+<!--        android:inputType="textMultiLine"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.497"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/uploaded_image" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/new_idea_desired_skills"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:ems="10"-->
+<!--        android:gravity="start|top"-->
+<!--        android:inputType="textMultiLine"-->
+<!--        android:hint="Add the desired skills of partners"-->
+<!--        android:textColorHint="@color/dark_grey_hint"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/create_new_idea"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/new_idea_description" />-->
+
+<!--    <ImageView-->
+<!--        android:id="@+id/uploaded_image"-->
+<!--        android:layout_width="100sp"-->
+<!--        android:layout_height="100sp"-->
+<!--        android:layout_marginTop="32dp"-->
+<!--        android:src="@mipmap/select_image_round"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.498"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/new_idea_name" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>
