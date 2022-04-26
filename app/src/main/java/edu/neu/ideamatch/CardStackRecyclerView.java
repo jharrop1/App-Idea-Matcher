@@ -123,16 +123,16 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
             @Override
             public void onCardSwiped(Direction direction) {
                 if (direction == Direction.Right){
-                    Toast.makeText(CardStackRecyclerView.this, "Direction Right", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(CardStackRecyclerView.this, "Direction Right", Toast.LENGTH_SHORT).show();
                     userNode.child("likedIdeas").child(projectID).setValue(ideaName);
-                    //Make it take the user to an ideaDetails page about the idea information
-                    //Add it to a list of ideas liked by the user
+
                 }
                 if (direction == Direction.Left){
-                    Toast.makeText(CardStackRecyclerView.this, "Direction Left", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(CardStackRecyclerView.this, "Direction Left", Toast.LENGTH_SHORT).show();
                 }
 
                 if (csManager.getTopPosition() == csAdapter.getItemCount()){
+                    //If you run out of ideas display the textview
                     outofideas = (TextView) findViewById(R.id.out_of_ideas);
                     outofideas.setVisibility(View.VISIBLE);
                 }
@@ -162,6 +162,7 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
                 TextView cardTv = view.findViewById(R.id.idea_name);
             }
         });
+        //Sets up the cardstack with setting from the library and the recyclerview portion
         csManager.setStackFrom(StackFrom.None);
         csManager.setVisibleCount(3);
         csManager.setTranslationInterval(8.0f);
@@ -177,16 +178,6 @@ public class CardStackRecyclerView extends AppCompatActivity implements Navigati
         cardStackView.setAdapter(csAdapter);
         cardStackView.setItemAnimator(new DefaultItemAnimator());
     }
-
-
-    public void logoutUser(View view)  {
-        rvAuth.signOut();
-        Intent intent = new Intent(CardStackRecyclerView.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-        return;
-    }
-
 
     //Close the menu not the applciuation
     @Override

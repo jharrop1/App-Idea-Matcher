@@ -10,6 +10,7 @@ public class User {
     public User() {
     }
 
+    //Constructor
     public User(String name, String email) {
         this.userName = name;
         this.email = email;

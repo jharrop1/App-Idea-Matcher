@@ -66,6 +66,7 @@ public class LikedIdeasRecyclerViewAdapter extends RecyclerView.Adapter<LikedIde
         public TextView liVhName, liVhDescription, liProjectID;
 
         LikedIdeasViewHolder(@NonNull View likedIdeaView){
+            //Initialize variables
             super(likedIdeaView);
             likedIdeaView.setOnClickListener(this);
 
@@ -78,6 +79,7 @@ public class LikedIdeasRecyclerViewAdapter extends RecyclerView.Adapter<LikedIde
 
         @Override
         public void onClick(View view) {
+            //On click goes to details activity
             Intent intent = new Intent(view.getContext(), LikedIdeaDetailsActivity.class);
             Bundle ideaBundle = new Bundle();
             ideaBundle.putString("projectID", liProjectID.getText().toString());

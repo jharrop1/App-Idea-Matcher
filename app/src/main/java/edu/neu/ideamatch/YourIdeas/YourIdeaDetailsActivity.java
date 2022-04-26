@@ -34,6 +34,7 @@ public class YourIdeaDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_your_idea_details);
 
+        //Get the project ID from the bundle
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
@@ -45,6 +46,7 @@ public class YourIdeaDetailsActivity extends AppCompatActivity {
             projectID = (String) savedInstanceState.getSerializable("projectID");
         }
 
+        //Initialize views
         yidIdeaName = (TextView) findViewById(R.id.your_idea_details_idea_name);
         yidCreatorName = (TextView) findViewById(R.id.your_idea_details_creator_name);
         yidDescription = (TextView) findViewById(R.id.your_idea_details_idea_description);
@@ -56,6 +58,7 @@ public class YourIdeaDetailsActivity extends AppCompatActivity {
 
         getProject(projectID);
 
+        //Open up edit activity
         yiEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +72,7 @@ public class YourIdeaDetailsActivity extends AppCompatActivity {
         });
     }
 
+    //Retrives the project information from the db
     private void getProject(String key) {
         DatabaseReference projectDB = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas").child(key);
         projectDB.addValueEventListener(new ValueEventListener() {
@@ -119,6 +123,7 @@ public class YourIdeaDetailsActivity extends AppCompatActivity {
         });
     }
 
+    //Sets the project information in to the views
     private void setYourIdeaDetailsInformation(IdeaDetails ideaDetails) {
         yidIdeaName.setText(ideaDetails.getIdeaName());
         yidCreatorName.setText(ideaDetails.getCreatorName());

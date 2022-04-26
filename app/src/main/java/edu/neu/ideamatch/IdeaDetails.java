@@ -3,7 +3,6 @@ package edu.neu.ideamatch;
 import android.net.Uri;
 
 public class IdeaDetails {
-//    private int image;
     private String imageURL;
     private String ideaName;
     private String ideaDescription;
@@ -33,6 +32,7 @@ public class IdeaDetails {
         this.imageURL = cimageURL;
     }
 
+    //Constructor without image uri
     public IdeaDetails(
                        String cideaName,
                        String ccontactInfo,
@@ -47,8 +47,6 @@ public class IdeaDetails {
         this.desiredSkills = cdesiredSkills;
         this.projectID = cprojectID;
     }
-
-
 
     public String getImageURL() {
         return imageURL;
@@ -65,14 +63,6 @@ public class IdeaDetails {
     public void setContactInfo(String contactInfo) {
         this.contactInfo = contactInfo;
     }
-
-//    public int getImage() {
-//        return image;
-//    }
-//
-//    public void setImage(int image) {
-//        this.image = image;
-//    }
 
     public String getProjectID() {
         return projectID;

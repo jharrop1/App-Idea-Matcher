@@ -66,12 +66,13 @@ public class YourIdeaRecyclerView extends AppCompatActivity implements Navigatio
 
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        //Clears the list for a fresh view
         if(yourIdeasList!=null){
             yourIdeasList.clear();
         }
 
+        //Sets up the recycler view
         yiRecyclerView = (RecyclerView) findViewById(R.id.rv_your_ideas);
-        //If scrolling doesn't work add scrolling on the layout resource file
         yiRecyclerView.setNestedScrollingEnabled(false);
         yiRecyclerView.setHasFixedSize(true);
         yourIdeasLayoutManager = new LinearLayoutManager(YourIdeaRecyclerView.this);
@@ -88,6 +89,7 @@ public class YourIdeaRecyclerView extends AppCompatActivity implements Navigatio
         return yourIdeasList;
     }
 
+    //Get the project id
     private void getProjectID() {
         DatabaseReference yourIdeasDB = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("yourIdeas");
         yourIdeasDB.addValueEventListener(new ValueEventListener() {
@@ -107,6 +109,7 @@ public class YourIdeaRecyclerView extends AppCompatActivity implements Navigatio
         });
     }
 
+    //Get the project from DB
     private void getProject(String key) {
         DatabaseReference projectDB = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas").child(key);
         projectDB.addValueEventListener(new ValueEventListener() {
@@ -146,6 +149,7 @@ public class YourIdeaRecyclerView extends AppCompatActivity implements Navigatio
                             ideaDesiredSkills,
                             ideaID,
                             ideaImageURL);
+                    //sets the project into the list for the Recylcerview
                     if (ideaDetailObject.getImageURL() == "" || ideaDetailObject.getImageURL() == null || projectIDList.contains(ideaDetailObject.getProjectID())) {
 
                     } else {
@@ -163,7 +167,7 @@ public class YourIdeaRecyclerView extends AppCompatActivity implements Navigatio
         });
     }
 
-    //Close the menu not the applciuation
+    //Close the menu not the application
     @Override
     public void onBackPressed() {
         if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -173,6 +177,7 @@ public class YourIdeaRecyclerView extends AppCompatActivity implements Navigatio
         }
     }
 
+    //Navigation bar options and routing
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {

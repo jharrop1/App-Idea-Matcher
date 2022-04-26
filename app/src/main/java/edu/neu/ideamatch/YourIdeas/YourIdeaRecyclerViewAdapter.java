@@ -61,7 +61,7 @@ public class YourIdeaRecyclerViewAdapter extends RecyclerView.Adapter<YourIdeaRe
 
 
     class YourIdeasViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
+        //initialize views
         public ImageView yiVhImage;
         public TextView yiVhName, yiVhDescription, yiProjectID;
 
@@ -78,6 +78,7 @@ public class YourIdeaRecyclerViewAdapter extends RecyclerView.Adapter<YourIdeaRe
 
         @Override
         public void onClick(View view) {
+            //handles onclick and puts in the project id to the bundle
             Intent intent = new Intent(view.getContext(), YourIdeaDetailsActivity.class);
             Bundle ideaBundle = new Bundle();
             ideaBundle.putString("projectID", yiProjectID.getText().toString());

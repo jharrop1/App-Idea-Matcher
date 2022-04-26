@@ -68,6 +68,7 @@ public class EditYourIdeaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_your_idea);
 
+        //Get project id from bundles
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
@@ -79,11 +80,13 @@ public class EditYourIdeaActivity extends AppCompatActivity {
             projectID = (String) savedInstanceState.getSerializable("projectID");
         }
 
+        //Sets upd atabase references
         root = FirebaseDatabase.getInstance();
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         userNode = root.getReference().child("Users").child(userID);
         DatabaseReference projectsList = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas");
 
+        //Initilize views
         eyidIdeaName = (EditText) findViewById(R.id.edit_your_idea_details_idea_name);
         eyidCreatorName = (EditText) findViewById(R.id.edit_your_idea_details_creator_name);
         eyidDescription = (EditText) findViewById(R.id.edit_your_idea_details_idea_description);
@@ -100,15 +103,10 @@ public class EditYourIdeaActivity extends AppCompatActivity {
 
 
 
-        //Button to select new image
+        //Button to select new image with an alert given for the
         eyidImageLogo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-//                Intent selectPhotoIntent = new Intent(Intent.ACTION_PICK);
-//                selectPhotoIntent.setType("image/*");
-//                startActivityForResult(selectPhotoIntent, PICK_IMAGE_REQUEST);
-
                 AlertDialog.Builder imageAlert = new AlertDialog.Builder(EditYourIdeaActivity.this);
                 imageAlert.setTitle("Select Image");
                 imageAlert.setMessage("How would you like to select your image?");
@@ -175,10 +173,11 @@ public class EditYourIdeaActivity extends AppCompatActivity {
 
     }
 
+    //Where the startactivityfor result is handleded
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        //pick image from gallery
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             eiImageUri = data.getData();
@@ -195,13 +194,14 @@ public class EditYourIdeaActivity extends AppCompatActivity {
             eyidImageLogo.setImageURI(eiImageUri);
             imageSelected = true;
         }
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK
-                && data != null) {
+        //take photo from camera and save it
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             setPic();
         }
     }
 
 
+    //get the project and the idea details
     private void getProject(String key) {
         DatabaseReference projectDB = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas").child(key);
         projectDB.addValueEventListener(new ValueEventListener() {
@@ -253,6 +253,7 @@ public class EditYourIdeaActivity extends AppCompatActivity {
         });
     }
 
+    //Sets the details to the views
     private void setYourIdeaDetailsInformation(IdeaDetails ideaDetails) {
         eyidIdeaName.setText(ideaDetails.getIdeaName());
         eyidCreatorName.setText(ideaDetails.getCreatorName());
@@ -277,6 +278,7 @@ public class EditYourIdeaActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //Go to ideas and puts the id into a budnle
     private void goToYourIdeasRV(String projectID) {
         Intent resfreshIntent = new Intent(EditYourIdeaActivity.this, YourIdeaDetailsActivity.class);
         Bundle ideaBundle = new Bundle();
@@ -285,6 +287,7 @@ public class EditYourIdeaActivity extends AppCompatActivity {
         startActivity(resfreshIntent);
     }
 
+    //Remove ideas from the database if you made it or someone liked it.
     private void removeFromUsers(String keyToRemove) {
         DatabaseReference userList = FirebaseDatabase.getInstance().getReference().child("Users");
         userList.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -309,6 +312,7 @@ public class EditYourIdeaActivity extends AppCompatActivity {
 
     }
 
+    //Update the idea based on what is given in editactivity
     private void updateIdea(String userID, DatabaseReference userNode, String key) {
         //Get the text from the detail boxes
         String ideaName = eyidIdeaName.getText().toString();
@@ -375,6 +379,7 @@ public class EditYourIdeaActivity extends AppCompatActivity {
         });
     }
 
+    //Uploads file to android storage
     private void uploadFile(String key, String ideaname) {
         if (eiImageUri != null) {
             // Defining the storageReference

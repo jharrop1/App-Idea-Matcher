@@ -35,21 +35,8 @@ public class RegistrationActivity extends AppCompatActivity implements FirebaseA
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
+        //Initizlie views and sets up authentication
         regAuth = FirebaseAuth.getInstance();
-
-//        firebaseAuthStateListener = new FirebaseAuth.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//                final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                if (user != null) {
-//                    //User is logged in it sends it to mainActivity
-//                    Intent intent = new Intent(RegistrationActivity.this, CardStackRecyclerView.class);
-//                    startActivity(intent);
-//                    finish();
-//                }
-//            }
-//        };
-
         regRegisterButton = (Button) findViewById(R.id.register_account);
 
         regEmail = (EditText) findViewById(R.id.registration_email);
@@ -58,6 +45,7 @@ public class RegistrationActivity extends AppCompatActivity implements FirebaseA
 
         regUserName.requestFocus();
 
+        //Registers user and goes to siwping activity
         regRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,6 +60,7 @@ public class RegistrationActivity extends AppCompatActivity implements FirebaseA
         final String password = regPassword.getText().toString();
         final String userName = regUserName.getText().toString();
 
+        //Field validation
         if(userName.isEmpty()) {
             regUserName.setError("Valid email is required");
             regUserName.requestFocus();
@@ -99,11 +88,11 @@ public class RegistrationActivity extends AppCompatActivity implements FirebaseA
         regAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                //Should probably make an onsuccess instead of an on failure
                 if (!task.isSuccessful()) {
                     //Registration was not successful
                     Toast.makeText(RegistrationActivity.this, "Registration was not successful", Toast.LENGTH_SHORT).show();
                 } else {
+                    //Rgisters user with the infromation from the veiws
                     String userId = regAuth.getCurrentUser().getUid();
                     User user = new User(userName, email);
                     DatabaseReference currentUserNode = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -127,11 +116,12 @@ public class RegistrationActivity extends AppCompatActivity implements FirebaseA
         FirebaseAuth.getInstance().removeAuthStateListener(this);
     }
 
+    //Listener to check
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            //User is logged in it sends it to mainActivity
+            //User is logged in it sends it to card stack activity
             Intent intent = new Intent(RegistrationActivity.this, CardStackRecyclerView.class);
             startActivity(intent);
             finish();

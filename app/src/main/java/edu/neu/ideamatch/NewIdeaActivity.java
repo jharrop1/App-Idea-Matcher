@@ -65,15 +65,15 @@ public class NewIdeaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_idea);
 
+        //Initialize views
         niIdeaName = (EditText) findViewById(R.id.new_idea_name);
         niDescription = (EditText) findViewById(R.id.new_idea_description);
         niDesiredSkills = (EditText) findViewById(R.id.new_idea_desired_skills);
         niCreateNewIdea = (Button) findViewById(R.id.create_new_idea);
         niImage = (ImageView) findViewById(R.id.uploaded_image);
 
-
+        // Get DB and user
         root = FirebaseDatabase.getInstance();
-
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         //Get the user node for the value listener
@@ -88,6 +88,7 @@ public class NewIdeaActivity extends AppCompatActivity {
             }
         });
 
+        //Set the image from camera or storage
         niImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,9 +108,6 @@ public class NewIdeaActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dispatchTakePictureIntent();
-//                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//                        dialogInterface.dismiss();
                     }
                 });
                 imageAlert.show();
@@ -122,7 +120,7 @@ public class NewIdeaActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        //From images on device
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             niImageUri = data.getData();
@@ -139,17 +137,9 @@ public class NewIdeaActivity extends AppCompatActivity {
             niImage.setImageURI(niImageUri);
             imageSelected = true;
         }
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK
-                && data != null) {
-            //TODO need to save the file to get a URI it looks like
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            niImage.setImageBitmap(imageBitmap);
-
+        //From camera
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             setPic();
-            //niImage.setImageURI(niImageUri);
-
         }
     }
 
@@ -219,9 +209,8 @@ public class NewIdeaActivity extends AppCompatActivity {
     }
 
 
-
+    //Creates the idea and uploads it to the db
     private void createNewIdea(String userID, DatabaseReference userNode, String key) {
-        //TODO Check if things are null if needed
         //Get the text from the detail boxes
         String ideaName = niIdeaName.getText().toString();
         String description = niDescription.getText().toString();

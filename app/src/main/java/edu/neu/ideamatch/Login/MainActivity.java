@@ -32,8 +32,10 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Sets up firebase authentication
         logAuth = FirebaseAuth.getInstance();
 
+        //Initialize veiwes
         logInButton = (Button) findViewById(R.id.main_login_button);
         mainEmail = (EditText) findViewById(R.id.main_login_email);
         mainPassword = (EditText) findViewById(R.id.main_login_password);
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 final String email = mainEmail.getText().toString();
                 final String password = mainPassword.getText().toString();
 
+                //Ensures email and password are input
                 if(email.isEmpty()) {
                     mainEmail.setError("Valid email is required");
                     mainEmail.requestFocus();
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
                     return;
                 }
 
+                //Logs the user in
                 logAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements FirebaseAuth.Auth
         FirebaseAuth.getInstance().removeAuthStateListener(this);
     }
 
+    //Listener for the authentication state change to log in user when a user is found
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

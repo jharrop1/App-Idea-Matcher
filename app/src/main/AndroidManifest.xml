@@ -43,9 +43,6 @@
             android:name=".Login.RegistrationActivity"
             android:exported="false" />
         <activity
-            android:name=".CardStackRecyclerViewAdapter"
-            android:exported="false" />
-        <activity
             android:name=".CardStackRecyclerView"
             android:exported="false" />
         <activity

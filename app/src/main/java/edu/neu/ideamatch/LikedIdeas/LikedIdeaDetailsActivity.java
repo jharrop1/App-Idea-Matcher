@@ -29,6 +29,7 @@ public class LikedIdeaDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_liked_idea_details);
 
+        //Get the project id given to the intent
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
@@ -40,6 +41,7 @@ public class LikedIdeaDetailsActivity extends AppCompatActivity {
             projectID = (String) savedInstanceState.getSerializable("projectID");
         }
 
+        //Initialize views
         lidIdeaName = (TextView) findViewById(R.id.liked_idea_details_idea_name);
         lidCreatorName = (TextView) findViewById(R.id.liked_idea_details_creator_name);
         lidDescrption = (TextView) findViewById(R.id.liked_idea_details_idea_description);
@@ -52,6 +54,7 @@ public class LikedIdeaDetailsActivity extends AppCompatActivity {
 
     }
 
+    //Gets the project with the string ID and populates views
     private void getProject(String key) {
         DatabaseReference projectDB = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas").child(key);
         projectDB.addValueEventListener(new ValueEventListener() {
@@ -102,6 +105,7 @@ public class LikedIdeaDetailsActivity extends AppCompatActivity {
         });
     }
 
+    //Actuually populates the views
     private void setLikedIdeaDetailsInformation(IdeaDetails ideaDetails) {
         lidIdeaName.setText(ideaDetails.getIdeaName());
         lidCreatorName.setText(ideaDetails.getCreatorName());

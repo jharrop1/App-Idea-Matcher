@@ -66,12 +66,13 @@ public class LikedIdeasRecyclerView extends AppCompatActivity implements Navigat
 
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        //Clears list so it doesn't repeat ideas
         if(likedIdeasList!=null){
             likedIdeasList.clear();
         }
 
+        //Sets up recylcer view
         liRecyclerView = (RecyclerView) findViewById(R.id.rv_liked_ideas);
-        //If scrolling doesn't work add scrolling on the layout resource file
         liRecyclerView.setNestedScrollingEnabled(false);
         liRecyclerView.setHasFixedSize(true);
         likedIdeasLayoutManager = new LinearLayoutManager(LikedIdeasRecyclerView.this);
@@ -80,7 +81,6 @@ public class LikedIdeasRecyclerView extends AppCompatActivity implements Navigat
         liRecyclerView.setAdapter(likedIdeasAdapter);
 
         getProjectID();
-
     }
 
 
@@ -88,6 +88,7 @@ public class LikedIdeasRecyclerView extends AppCompatActivity implements Navigat
         return likedIdeasList;
     }
 
+    //Gets the project based on what was clicked
     private void getProjectID() {
         DatabaseReference likedIdeasDB = FirebaseDatabase.getInstance().getReference().child("Users").child(userID).child("likedIdeas");
         likedIdeasDB.addValueEventListener(new ValueEventListener() {
@@ -107,6 +108,7 @@ public class LikedIdeasRecyclerView extends AppCompatActivity implements Navigat
         });
     }
 
+    //Gets the project and populates an ideaDetails object
     private void getProject(String key) {
         DatabaseReference projectDB = FirebaseDatabase.getInstance().getReference().child("ProjectIdeas").child(key);
         projectDB.addValueEventListener(new ValueEventListener() {
@@ -147,6 +149,7 @@ public class LikedIdeasRecyclerView extends AppCompatActivity implements Navigat
                             ideaID,
                             ideaImageURL);
 
+                    //Ensures projects aren't added twice and notifies the adapter
                     if (ideaDetailObject.getImageURL() == "" || ideaDetailObject.getImageURL() == null || projectIDList.contains(ideaDetailObject.getProjectID())) {
 
                     } else {
@@ -174,6 +177,7 @@ public class LikedIdeasRecyclerView extends AppCompatActivity implements Navigat
         }
     }
 
+    //Navigation menu new itent navigation
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
