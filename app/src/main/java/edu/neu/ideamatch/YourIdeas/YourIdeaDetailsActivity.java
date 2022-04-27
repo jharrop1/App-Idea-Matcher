@@ -138,8 +138,8 @@ public class YourIdeaDetailsActivity extends AppCompatActivity {
                 .into(yidImageLogo);
     }
 
-    public void onBackPressed() {
-        Intent newYourIdeasIntent = new Intent(YourIdeaDetailsActivity.this, YourIdeaRecyclerView.class);
-        startActivity(newYourIdeasIntent);
-    }
+//    public void onBackPressed() {
+////        Intent newYourIdeasIntent = new Intent(YourIdeaDetailsActivity.this, YourIdeaRecyclerView.class);
+////        startActivity(newYourIdeasIntent);
+////    }
 }
